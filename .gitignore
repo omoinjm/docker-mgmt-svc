@@ -1,0 +1,5 @@
+.env
+
+# NGINX PROXY MANAGER
+letsencrypt/
+data/
