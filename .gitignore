@@ -6,5 +6,5 @@ data/
 
 # pihole volumes
 etc-pihole/
-etc-dnsmasq/
+etc-dnsmasq.d/
 unbound/
