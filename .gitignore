@@ -3,3 +3,8 @@
 # NGINX PROXY MANAGER
 letsencrypt/
 data/
+
+# pihole volumes
+etc-pihole/
+etc-dnsmasq/
+unbound/
