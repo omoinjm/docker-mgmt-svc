@@ -8,18 +8,18 @@ Build instructions:
 docker build --no-cache -t ollama-base:latest ./base/.
 ```
 
-## DeepSeek
+## Ollama Models
 
 Build instructions:
 
 ```bash
-docker build --no-cache -t ollama-deepseek:latest ./deepseek/.
+docker build --no-cache -t ollama-models:latest ./models/.
 ```
 
 Run instructions:
 
 ```bash
-docker run -d --name deepseek-container -p 11434:11434 -v ollama-models:/root/.ollama ollama-deepseek:latest
+docker run -d --name ollama-server -p 11434:11434 -v ollama-models:/root/.ollama ollama-models:latest
 ```
 
 ## API payload
@@ -35,4 +35,3 @@ docker run -d --name deepseek-container -p 11434:11434 -v ollama-models:/root/.o
 - [Google's Gemma](https://ai.google.dev/gemma)
 
 - [DeepSeek R1](https://www.deepseek.com/)
-

@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
   --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
-ARG OLLAMA_VERSION=0.5.7
+ARG OLLAMA_VERSION=0.13.5
 ARG OLLAMA_URL=https://github.com/ollama/ollama/releases/download/v${OLLAMA_VERSION}/ollama-linux-amd64.tgz
 
 RUN curl -L ${OLLAMA_URL} -o /tmp/ollama.tgz && \

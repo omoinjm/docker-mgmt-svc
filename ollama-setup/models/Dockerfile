@@ -9,6 +9,8 @@ RUN ollama serve & \
   SERVER_PID=$! && \
   sleep 5 && \
   ollama pull deepseek-coder:latest && \
+  # ollama pull qwen2.5vl:32b && \
+  # ollama pull gpt-oss:20b && \
   kill $SERVER_PID && \
   sleep 2
 
