@@ -11,9 +11,20 @@ Custom Docker image for running specific AI models (DeepSeek, Llama, Gemma, etc.
 
 ## 🏗️ Building the Image
 
-### Standard Build
+### Setup Configuration
+
 ```bash
 cd ai-ml/ollama-setup/models
+
+# Copy environment template
+cp .env.example .env
+
+# Edit with your settings (optional) 
+nano .env
+```
+
+### Standard Build
+```bash
 docker build --no-cache -t ollama-models:latest .
 ```
 

@@ -10,10 +10,21 @@ A lightweight tool for gathering information about phone numbers. This setup run
 
 ## 🚀 Quick Start
 
-### Start the Service
+### Setup Configuration
 
 ```bash
 cd osint-tools/phoneinfoga
+
+# Copy environment template
+cp .env.example .env
+
+# Edit with your settings (optional)
+nano .env
+```
+
+### Start the Service
+
+```bash
 docker-compose up -d
 ```
 

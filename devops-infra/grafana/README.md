@@ -11,10 +11,21 @@ Grafana is an open-source monitoring and visualization platform. This setup prov
 
 ## 🚀 Quick Start
 
-### Start Grafana
+### Setup Configuration
 
 ```bash
 cd devops-infra/grafana
+
+# Copy environment template
+cp .env.example .env
+
+# Edit with your settings (especially admin password!)
+nano .env
+```
+
+### Start Grafana
+
+```bash
 docker-compose up -d
 ```
 

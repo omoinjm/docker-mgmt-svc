@@ -18,9 +18,22 @@ Base Docker image for AI/ML model serving with Ollama. This image provides the f
 
 ## 🔨 Building the Base Image
 
+### Setup Configuration
+
+```bash
+cd ai-ml/ollama-setup/base
+
+# Copy environment template
+cp .env.example .env
+
+# Edit with your settings (optional)
+nano .env
+```
+
+### Build the Image
+
 ```bash
 # Build the base image
-cd ai-ml/ollama-setup/base
 docker build --no-cache -t ollama-base:latest .
 
 # Or from parent directory

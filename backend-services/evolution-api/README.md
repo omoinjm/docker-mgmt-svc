@@ -14,14 +14,20 @@ Evolution API is an open-source WhatsApp API that enables integration with Whats
 
 ### Prerequisites
 
-1. Ensure `.env` file exists with proper configuration (see Configuration section)
+1. Copy and configure `.env` file:
+   ```bash
+   cd backend-services/evolution-api
+   cp .env.example .env
+   
+   # Edit with your settings
+   nano .env
+   ```
+
 2. Docker and Docker Compose installed
 
 ### Start All Services
 
 ```bash
-cd backend-services/evolution-api
-
 docker-compose up -d
 ```
 

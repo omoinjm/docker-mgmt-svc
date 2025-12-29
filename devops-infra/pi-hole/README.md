@@ -65,10 +65,21 @@ nslookup google.com
 
 ## 🚀 Quick Start
 
-### Start Pi-hole
+### Setup Configuration
 
 ```bash
 cd devops-infra/pi-hole
+
+# Copy environment template
+cp .env.example .env
+
+# Edit with your settings (CHANGE THE PASSWORD!)
+nano .env
+```
+
+### Start Pi-hole
+
+```bash
 docker-compose up -d
 ```
 

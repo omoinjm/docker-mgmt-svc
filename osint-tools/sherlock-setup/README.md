@@ -11,9 +11,20 @@ Sherlock is a tool that searches for usernames across social networks and public
 
 ## 🚀 Quick Start
 
-### Basic Search
+### Setup Configuration
+
 ```bash
 cd osint-tools/sherlock-setup
+
+# Copy environment template
+cp .env.example .env
+
+# Edit with your settings (optional)
+nano .env
+```
+
+### Basic Search
+```bash
 docker-compose run --rm sherlock <username>
 ```
 
