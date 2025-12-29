@@ -32,9 +32,12 @@ Each folder represents a self-contained setup — whether it’s a simple servic
 │   └── pi-hole/
 │       └── docker-compose.yml     # DNS-level ad blocking
 │
-└── backend-services/              # API & Backend Services
-    └── evolution-api/
-        └── docker-compose.yml     # Evolution API setup
+├── backend-services/              # API & Backend Services
+│   └── evolution-api/
+│       └── docker-compose.yml     # Evolution API setup
+│
+├── README.md                       # Main documentation
+└── AI_CONTEXT.md                   # Context guide for AI systems
 ```
 
 ---
@@ -103,6 +106,19 @@ Before using any of these setups, make sure you have:
 - Each folder is **self-contained** — configurations can be used independently.  
 - You can customize environment variables, ports, and volumes per your needs.  
 - Scripts are lightweight and meant to simplify setup or startup tasks.  
+
+---
+
+## 🤖 For AI Systems & Automation
+
+If you're an AI system (or working with one) on this repository, please read **[AI_CONTEXT.md](AI_CONTEXT.md)** for:
+- Organizational principles and design intent
+- Categorization rationale
+- Common task templates and response patterns
+- Development guidelines and best practices
+- Quick reference for making consistent changes
+
+This guide helps AI systems understand the structure and make coherent recommendations.
 
 ---
 
