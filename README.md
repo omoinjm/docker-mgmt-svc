@@ -10,19 +10,31 @@ Each folder represents a self-contained setup — whether it’s a simple servic
 
 ```
 .
-├── evolution-api/
-│   └── docker-compose.yml         # Docker Compose setup for the Evolution API
+├── osint-tools/                   # OSINT & Reconnaissance
+│   ├── phoneinfoga/
+│   │   └── docker-compose.yml     # Phone number reconnaissance tool
+│   └── sherlock-setup/
+│       └── docker-compose.yml     # Username search across social networks
 │
-└── ollama-setup/
-    ├── base/
-    │   └── Dockerfile             # Base image used across multiple AI-related setups
-    │
-    ├── deepseek/
-    │   ├── Dockerfile             # Custom image for running DeepSeek or Ollama models
-    │   └── scripts/
-    │       └── start.sh           # Startup script for model initialization
-    │
-    └── README.md                  # Details about the Ollama setup
+├── ai-ml/                         # AI & Machine Learning
+│   └── ollama-setup/
+│       ├── base/
+│       │   └── Dockerfile         # Base image for AI setups
+│       ├── models/
+│       │   ├── Dockerfile         # Custom image for DeepSeek/Ollama models
+│       │   └── scripts/
+│       │       └── start.sh       # Model initialization script
+│       └── README.md              # Ollama setup details
+│
+├── devops-infra/                  # DevOps & Infrastructure
+│   ├── grafana/
+│   │   └── docker-compose.yml     # Monitoring & visualization dashboard
+│   └── pi-hole/
+│       └── docker-compose.yml     # DNS-level ad blocking
+│
+└── backend-services/              # API & Backend Services
+    └── evolution-api/
+        └── docker-compose.yml     # Evolution API setup
 ```
 
 ---
@@ -45,11 +57,15 @@ This project acts as a **library of Docker templates** that I’ve built for:
    cd docker-templates
    ```
 
-2. **Navigate to a specific setup:**
+2. **Navigate to a specific use case group:**
    ```bash
-   cd evolution-api
+   cd osint-tools/phoneinfoga
    # or
-   cd ollama-setup/deepseek
+   cd ai-ml/ollama-setup
+   # or
+   cd devops-infra/grafana
+   # or
+   cd backend-services/evolution-api
    ```
 
 3. **Build and run:**
@@ -66,10 +82,10 @@ This project acts as a **library of Docker templates** that I’ve built for:
 
 | Folder | Description |
 |--------|--------------|
-| **evolution-api/** | Contains the Docker Compose configuration for the Evolution API. |
-| **ollama-setup/** | Templates for setting up AI-related environments like DeepSeek or Ollama. |
-| **base/** | Base image used as a foundation for other Docker builds. |
-| **deepseek/** | Custom container setup for DeepSeek model operations. |
+| **osint-tools/** | OSINT & reconnaissance tools for intelligence gathering |
+| **ai-ml/** | AI & machine learning setups (Ollama with model templates) |
+| **devops-infra/** | DevOps tools for monitoring, DNS, and infrastructure management |
+| **backend-services/** | API platforms and backend service configurations |
 
 ---
 
