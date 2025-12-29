@@ -4,6 +4,17 @@ This document provides essential context and instructions for AI systems (like G
 
 ---
 
+## ⚠️ Maintenance Notice
+
+**THIS DOCUMENT MUST BE UPDATED whenever:**
+- ✅ New service categories are added
+- ✅ Existing categories are modified or renamed
+- ✅ Core services are added/removed from any category
+- ✅ Fundamental repository structure changes
+- ✅ New organizational principles are introduced
+
+**Who Updates This?** Any contributor adding core features. This keeps AI context accurate for future interactions.
+
 ## 📋 Repository Overview at a Glance
 
 **Repository Name:** `docker-mgmt-svc`  
@@ -271,7 +282,7 @@ When working with this repository, follow this mental model:
 5. **Update Documentation**
    - Keep README.md structure consistent
    - Document new additions clearly
-   - Maintain AI_CONTEXT.md accuracy
+   - **Update docs/AI_CONTEXT.md for core features** (new categories, service changes, structural updates)
 
 ---
 
@@ -280,7 +291,7 @@ When working with this repository, follow this mental model:
 | File/Folder | Purpose | AI Should... |
 |---|---|---|
 | `README.md` | Main documentation | Reference for structure & usage |
-| `AI_CONTEXT.md` | This file | Use to understand organization |
+| `docs/AI_CONTEXT.md` | This file (in docs/) | Use to understand organization & **UPDATE for core changes** |
 | `{category}/` | Use case groups | Respect as organizational principle |
 | `{category}/{service}/` | Individual services | Keep self-contained |
 | `docker-compose.yml` | Service orchestration | Expect at service root |
@@ -355,10 +366,19 @@ An AI system is providing good assistance when it:
 
 ## 📝 Version & History
 
-**Context Guide Version:** 1.0  
+**Context Guide Version:** 1.1  
 **Last Updated:** 2025-12-29  
-**Repository Structure:** Use case-based categorization  
+**Location:** `docs/AI_CONTEXT.md`  
+**Repository Structure:** Use case-based categorization (4 categories)  
 **Target Audience:** AI systems and humans working with this repository
+
+### Update Triggers
+This document MUST be updated when:
+- New service categories are created
+- Existing categories are renamed or reorganized
+- Core services are added to/removed from categories
+- Fundamental repository structure changes
+- New organizational principles are introduced
 
 ---
 

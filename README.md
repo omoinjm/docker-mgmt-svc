@@ -36,8 +36,11 @@ Each folder represents a self-contained setup — whether it’s a simple servic
 │   └── evolution-api/
 │       └── docker-compose.yml     # Evolution API setup
 │
-├── README.md                       # Main documentation
-└── AI_CONTEXT.md                   # Context guide for AI systems
+├── docs/
+│   ├── AI_CONTEXT.md              # Context guide for AI systems
+│   └── README.md                  # Documentation index
+│
+└── README.md                       # Main documentation
 ```
 
 ---
@@ -111,12 +114,14 @@ Before using any of these setups, make sure you have:
 
 ## 🤖 For AI Systems & Automation
 
-If you're an AI system (or working with one) on this repository, please read **[AI_CONTEXT.md](AI_CONTEXT.md)** for:
+If you're an AI system (or working with one) on this repository, please read **[docs/AI_CONTEXT.md](docs/AI_CONTEXT.md)** for:
 - Organizational principles and design intent
 - Categorization rationale
 - Common task templates and response patterns
 - Development guidelines and best practices
 - Quick reference for making consistent changes
+
+**⚠️ Important:** When making changes that add or modify core features/services, update the **[docs/AI_CONTEXT.md](docs/AI_CONTEXT.md)** to reflect the new structure. This keeps the context accurate for future AI interactions.
 
 This guide helps AI systems understand the structure and make coherent recommendations.
 
