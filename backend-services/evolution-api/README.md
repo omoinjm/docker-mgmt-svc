@@ -21,10 +21,12 @@ Evolution API is an open-source WhatsApp API that enables integration with Whats
 
 ```bash
 cd backend-services/evolution-api
+
 docker-compose up -d
 ```
 
 Services will start in order:
+
 1. PostgreSQL (database)
 2. Redis (cache)
 3. Evolution API (application)
@@ -57,6 +59,7 @@ curl http://localhost:8080/api/health
 ```
 
 Expected response:
+
 ```json
 {
   "status": "ok",
@@ -102,6 +105,7 @@ curl -X POST http://localhost:8080/api/send/text \
 ### 6. Listen to Webhooks
 
 Configure in `.env`:
+
 ```env
 WEBHOOK_URL=http://your-server.com/webhook
 WEBHOOK_API_KEY=your-api-key
@@ -155,6 +159,7 @@ nano .env
 ### Database Configuration
 
 Default PostgreSQL:
+
 - **Host:** postgres (container name)
 - **Port:** 5432
 - **Database:** evolution
@@ -162,6 +167,7 @@ Default PostgreSQL:
 - **Password:** admin (change this!)
 
 Change in docker-compose.yml:
+
 ```yaml
 environment:
   POSTGRES_USER: admin
@@ -172,23 +178,27 @@ environment:
 ## 📊 API Endpoints
 
 ### Instance Management
+
 - `GET /api/instances` - List all instances
 - `POST /api/instances` - Create new instance
 - `GET /api/instances/{instanceName}` - Get instance details
 - `DELETE /api/instances/{instanceName}` - Delete instance
 
 ### Messages
+
 - `POST /api/send/text` - Send text message
 - `POST /api/send/media` - Send media (image, video, audio)
 - `POST /api/send/document` - Send document
 - `GET /api/messages/{instanceName}` - Get message history
 
 ### Contacts
+
 - `GET /api/contacts/{instanceName}` - List contacts
 - `POST /api/contacts/{instanceName}` - Add contact
 - `DELETE /api/contacts/{instanceName}/{number}` - Delete contact
 
 ### Groups
+
 - `GET /api/groups/{instanceName}` - List groups
 - `POST /api/groups/{instanceName}/create` - Create group
 - `POST /api/groups/{instanceName}/add-participant` - Add member
@@ -246,6 +256,7 @@ docker exec -i postgres psql -U admin evolution < backup.sql
 ## 🆘 Troubleshooting
 
 **API Not Responding:**
+
 ```bash
 # Check container status
 docker-compose ps
@@ -258,6 +269,7 @@ curl -v http://localhost:8080/api/health
 ```
 
 **Database Connection Error:**
+
 ```bash
 # Check PostgreSQL is running
 docker-compose logs postgres
@@ -270,6 +282,7 @@ docker-compose restart
 ```
 
 **Redis Connection Issues:**
+
 ```bash
 # Check Redis is running
 docker-compose ps redis
@@ -281,6 +294,7 @@ docker exec redis redis-cli ping
 ```
 
 **Instance Won't Connect:**
+
 ```bash
 # Check logs for errors
 docker-compose logs evolution-api
@@ -295,6 +309,7 @@ curl -X POST http://localhost:8080/api/instances \
 ```
 
 **QR Code Expired:**
+
 ```bash
 # QR codes expire after ~2 minutes
 # Recreate instance and scan immediately
@@ -303,6 +318,7 @@ curl -X POST http://localhost:8080/api/instances ...
 ```
 
 **Messages Not Sending:**
+
 ```bash
 # Check instance is connected
 curl http://localhost:8080/api/instances/my-instance
@@ -325,11 +341,13 @@ docker-compose logs evolution-api
 ## 🧹 Cleanup
 
 ### Remove All Services
+
 ```bash
 docker-compose down
 ```
 
 ### Remove with Data (CAREFUL!)
+
 ```bash
 docker-compose down -v
 # This deletes:

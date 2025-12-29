@@ -3,4 +3,7 @@ services:
     container_name: sherlock
     image: sherlock/sherlock
     volumes:
-      - ./sherlock/:/opt/sherlock/results/
+      - sherlock_results:/opt/sherlock/results/
+
+volumes:
+  sherlock_results:

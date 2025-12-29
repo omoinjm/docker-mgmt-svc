@@ -11,30 +11,36 @@ A lightweight tool for gathering information about phone numbers. This setup run
 ## 🚀 Quick Start
 
 ### Start the Service
+
 ```bash
 cd osint-tools/phoneinfoga
 docker-compose up -d
 ```
 
 ### Access the Web UI
+
 Open your browser and navigate to:
+
 ```
 http://localhost:85
 ```
 
 ### Stop the Service
+
 ```bash
-docker-compose down
+docker-compose down -d
 ```
 
 ## 📖 Usage Examples
 
 ### Using the Web Interface
+
 1. Navigate to `http://localhost:85`
 2. Enter a phone number in international format (e.g., +1234567890)
 3. Click "Search" to gather information
 
 ### Using the REST API
+
 ```bash
 # Basic request
 curl http://localhost:85/api/v1/info?number=%2B1234567890
@@ -49,12 +55,16 @@ curl http://localhost:85/api/v1/info?number=%2B1234567890
 ## ⚙️ Configuration
 
 ### Environment Variables
+
 Currently uses default configuration. Modify `docker-compose.yml` to add:
+
 - Custom API keys (if using premium services)
 - Debug options
 
 ### Persistent Data
+
 Results are not persisted by default. To keep results:
+
 ```yaml
 volumes:
   - ./results:/app/results
@@ -63,6 +73,7 @@ volumes:
 ## 🔍 What It Does
 
 Phoneinfoga gathers information such as:
+
 - ✅ Phone number validation
 - ✅ Carrier detection
 - ✅ Country/region identification
@@ -83,6 +94,7 @@ Phoneinfoga gathers information such as:
 ## 🆘 Troubleshooting
 
 **Port Already in Use:**
+
 ```bash
 # Change port in docker-compose.yml
 ports:
@@ -90,11 +102,13 @@ ports:
 ```
 
 **Service Won't Start:**
+
 ```bash
 docker-compose logs -f phoneinfoga
 ```
 
 **No Results Returned:**
+
 - Check internet connectivity
 - Verify phone number format
 - Some regions may have limited data availability
@@ -102,6 +116,7 @@ docker-compose logs -f phoneinfoga
 ## 🧹 Cleanup
 
 To remove the service and all data:
+
 ```bash
 docker-compose down -v
 ```

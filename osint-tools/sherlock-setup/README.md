@@ -94,17 +94,24 @@ docker-compose run --rm sherlock --sites instagram twitter github myusername
 ## ⚙️ Configuration
 
 ### Volume Mount
-Results are automatically saved to:
+Results are stored in Docker named volume (not local filesystem):
 ```bash
-./sherlock/results/  # Host directory
-/opt/sherlock/results/  # Container directory
+# View volume
+docker volume inspect sherlock_results
+
+# Backup results
+docker run --rm -v sherlock_results:/data -v $(pwd):/backup \
+  alpine tar czf /backup/sherlock-backup.tar.gz -C /data .
+
+# Restore results  
+docker run --rm -v sherlock_results:/data -v $(pwd):/backup \
+  alpine tar xzf /backup/sherlock-backup.tar.gz -C /data
 ```
 
-### Add Results Directory
-```bash
-mkdir -p ./sherlock/results
-chmod 777 ./sherlock/results
-```
+**Volume Details:**
+- **Container path:** `/opt/sherlock/results/`
+- **Volume name:** `sherlock_results`
+- **Data location:** Managed by Docker (typically `/var/lib/docker/volumes/sherlock_results/_data/`)
 
 ## 🔍 What It Does
 
@@ -133,7 +140,8 @@ Sherlock searches for usernames across:
 
 **Permission Denied on Results:**
 ```bash
-chmod -R 777 ./sherlock/results/
+# Results are in Docker volume - use docker volume commands instead
+docker volume inspect sherlock_results
 ```
 
 **Container Exits Immediately:**
@@ -165,8 +173,8 @@ To remove the service:
 ```bash
 docker-compose down
 
-# To also clean up results
-rm -rf ./sherlock/results/
+# To also remove results volume (CAREFUL!)
+docker volume rm sherlock_results
 ```
 
 ## 💡 Pro Tips

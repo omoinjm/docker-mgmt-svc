@@ -22,11 +22,13 @@ sudo nano /etc/systemd/resolved.conf
 ```
 
 Find and modify this line:
+
 ```bash
 DNSStubListener=yes
 ```
 
 Change to:
+
 ```bash
 DNSStubListener=no
 ```
@@ -64,17 +66,20 @@ nslookup google.com
 ## 🚀 Quick Start
 
 ### Start Pi-hole
+
 ```bash
 cd devops-infra/pi-hole
 docker-compose up -d
 ```
 
 ### Access Web UI
+
 ```
-http://localhost
+http://localhost:80
 ```
 
 ### Get Admin Password
+
 ```bash
 docker logs pihole | grep "password:"
 
@@ -82,6 +87,7 @@ docker logs pihole | grep "password:"
 ```
 
 ### Stop Pi-hole
+
 ```bash
 docker-compose down
 ```
@@ -89,6 +95,7 @@ docker-compose down
 ## 📖 Usage Examples
 
 ### 1. Access Admin Dashboard
+
 ```
 http://localhost
 ```
@@ -98,6 +105,7 @@ Login with configured password (see docker-compose.yml)
 ### 2. Configure System DNS
 
 **Linux (Netplan):**
+
 ```yaml
 # /etc/netplan/00-installer-config.yaml
 network:
@@ -108,21 +116,24 @@ network:
       addresses: [192.168.1.100/24]
       gateway4: 192.168.1.1
       nameservers:
-        addresses: [127.0.0.1]  # Your Pi-hole server
+        addresses: [127.0.0.1] # Your Pi-hole server
 ```
 
 Apply changes:
+
 ```bash
 sudo netplan apply
 ```
 
 **macOS:**
+
 1. System Preferences → Network
 2. Select active connection
 3. DNS Servers → + → Enter Pi-hole IP
 4. Apply
 
 **Windows:**
+
 1. Settings → Network & Internet → Change adapter options
 2. Select adapter → Properties
 3. IPv4 Properties → DNS servers → Enter Pi-hole IP
@@ -130,6 +141,7 @@ sudo netplan apply
 ### 3. Check Dashboard
 
 The web UI shows:
+
 - Queries blocked today
 - Percentage of ads blocked
 - Top blocked domains
@@ -150,21 +162,48 @@ Edit `docker-compose.yml`:
 
 ```yaml
 environment:
-  TZ: 'America/Chicago'           # Timezone
-  WEBPASSWORD: 'SecurePassword'   # Web UI password
-  DHCP_ACTIVE: 'true'            # Enable DHCP
-  DHCP_START: '192.168.1.100'    # DHCP range start
-  DHCP_END: '192.168.1.200'      # DHCP range end
-  DHCP_ROUTER: '192.168.1.1'     # DHCP gateway
+  TZ: "America/Chicago" # Timezone
+  WEBPASSWORD: "SecurePassword" # Web UI password
+  DHCP_ACTIVE: "true" # Enable DHCP
+  DHCP_START: "192.168.1.100" # DHCP range start
+  DHCP_END: "192.168.1.200" # DHCP range end
+  DHCP_ROUTER: "192.168.1.1" # DHCP gateway
 ```
 
 ### Unbound Configuration
 
 For recursive DNS resolution (included in setup):
+
 - Uses Unbound for upstream DNS
 - No reliance on public DNS providers
 - Better privacy
-- Optional configuration in `unbound/` directory
+- Configuration stored in `unbound_data` Docker volume
+
+### Data Persistence
+
+Pi-hole uses Docker named volumes for data persistence:
+
+```bash
+# View volumes
+docker volume ls | grep pihole
+
+# Volumes used:
+# - pihole_data: Pi-hole configuration and databases
+# - dnsmasq_data: DNS masquerading config
+# - unbound_data: Unbound DNS resolver config
+```
+
+**Backup configuration:**
+```bash
+docker run --rm -v pihole_data:/data -v $(pwd):/backup \
+  alpine tar czf /backup/pihole-backup.tar.gz -C /data .
+```
+
+**Restore configuration:**
+```bash
+docker run --rm -v pihole_data:/data -v $(pwd):/backup \
+  alpine tar xzf /backup/pihole-backup.tar.gz -C /data
+```
 
 ## 📊 Popular Blocklists
 
@@ -220,33 +259,52 @@ Use regex patterns for advanced filtering:
 ### API Access
 
 Get stats via API:
+
 ```bash
 curl 'http://localhost/admin/api.php?status'
 ```
 
 ## 💾 Backup & Restore
 
-### Backup Configuration
+### Backup All Volumes
 
 ```bash
-docker exec pihole tar czf - /etc/pihole/ | gzip > pihole-backup.tar.gz
+# Backup Pi-hole configuration
+docker run --rm -v pihole_data:/data -v $(pwd):/backup \
+  alpine tar czf /backup/pihole-config-backup.tar.gz -C /data .
+
+# Backup dnsmasq configuration
+docker run --rm -v dnsmasq_data:/data -v $(pwd):/backup \
+  alpine tar czf /backup/dnsmasq-backup.tar.gz -C /data .
+
+# Backup Unbound configuration
+docker run --rm -v unbound_data:/data -v $(pwd):/backup \
+  alpine tar czf /backup/unbound-backup.tar.gz -C /data .
 ```
 
-### Restore Configuration
+### Restore All Volumes
 
 ```bash
-docker stop pihole
-docker rm pihole
+# Restore Pi-hole
+docker run --rm -v pihole_data:/data -v $(pwd):/backup \
+  alpine tar xzf /backup/pihole-config-backup.tar.gz -C /data
 
-# Restore volumes
-gunzip -c pihole-backup.tar.gz | docker exec -i pihole tar xzf -
+# Restore dnsmasq
+docker run --rm -v dnsmasq_data:/data -v $(pwd):/backup \
+  alpine tar xzf /backup/dnsmasq-backup.tar.gz -C /data
 
-docker-compose up -d
+# Restore Unbound
+docker run --rm -v unbound_data:/data -v $(pwd):/backup \
+  alpine tar xzf /backup/unbound-backup.tar.gz -C /data
+
+# Restart services
+docker-compose restart
 ```
 
 ## 🆘 Troubleshooting
 
 **DNS Not Resolving:**
+
 ```bash
 # Check container is running
 docker ps | grep pihole
@@ -262,6 +320,7 @@ sudo lsof -i :53
 ```
 
 **Can't Access Admin Panel:**
+
 ```bash
 # Check port 80
 sudo lsof -i :80
@@ -274,6 +333,7 @@ docker-compose logs pihole
 ```
 
 **Lost Admin Password:**
+
 ```bash
 # Stop Pi-hole
 docker-compose down
@@ -286,6 +346,7 @@ docker-compose up -d
 ```
 
 **High CPU Usage:**
+
 ```bash
 # Check what's consuming CPU
 docker stats pihole
@@ -295,6 +356,7 @@ docker stats pihole
 ```
 
 **Clients Can't Connect:**
+
 ```bash
 # Check Pi-hole IP address
 docker inspect pihole | grep IPAddress
@@ -316,19 +378,22 @@ nslookup google.com 192.168.1.x  # Pi-hole IP
 ## 🧹 Cleanup
 
 ### Remove Service
+
 ```bash
 docker-compose down
 ```
 
 ### Remove with Data
+
 ```bash
 docker-compose down -v
 ```
 
 ### Reset to Defaults
+
 ```bash
 docker-compose down -v
-docker volume rm pihole_etc-pihole
+# Removes all volumes: pihole_data, dnsmasq_data, unbound_data
 docker-compose up -d
 ```
 
@@ -346,6 +411,7 @@ docker-compose up -d
 ## 📋 Common Configurations
 
 ### Typical Setup
+
 ```bash
 # 1. Disable Ubuntu DNS Stub Listener (see Prerequisites)
 # 2. Start Pi-hole
@@ -357,7 +423,9 @@ docker-compose up -d
 ```
 
 ### Pi-hole + Unbound (Recursive DNS)
+
 This setup includes Unbound for:
+
 - Better privacy (no reliance on ISP/public DNS)
 - Faster resolution
 - DNSSEC validation
@@ -365,6 +433,7 @@ This setup includes Unbound for:
 Configuration in `unbound/` directory handles this automatically.
 
 ### Multiple Blocklists
+
 1. Start with 1-2 blocklists
 2. Monitor for false positives
 3. Add 1-2 more weekly if stable

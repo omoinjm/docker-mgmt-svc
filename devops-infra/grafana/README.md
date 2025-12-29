@@ -12,35 +12,42 @@ Grafana is an open-source monitoring and visualization platform. This setup prov
 ## 🚀 Quick Start
 
 ### Start Grafana
+
 ```bash
 cd devops-infra/grafana
 docker-compose up -d
 ```
 
 ### Access Web UI
+
 Open your browser and navigate to:
+
 ```
 http://localhost:3000
 ```
 
 ### Default Credentials
+
 - **Username:** `admin`
 - **Password:** `admin`
 - ⚠️ Change immediately on first login
 
 ### Stop Grafana
+
 ```bash
-docker-compose down
+docker-compose down -d
 ```
 
 ## 📖 Usage Examples
 
 ### 1. Access Grafana Dashboard
+
 ```
 http://localhost:3000
 ```
 
 ### 2. Add a Data Source
+
 1. Click "Data Sources" (or Connections → Data Sources)
 2. Click "Add data source"
 3. Select data source type (Prometheus, InfluxDB, etc.)
@@ -48,6 +55,7 @@ http://localhost:3000
 5. Click "Save & Test"
 
 ### 3. Create a Dashboard
+
 1. Click "+" → "Dashboard"
 2. Click "Add panel"
 3. Select data source
@@ -55,6 +63,7 @@ http://localhost:3000
 5. Save dashboard
 
 ### 4. Create an Alert
+
 1. In a panel, click "Alert"
 2. Configure alert conditions
 3. Set notification channels
@@ -63,6 +72,7 @@ http://localhost:3000
 ## ⚙️ Configuration
 
 ### Environment Variables
+
 Edit in `docker-compose.yml`:
 
 ```yaml
@@ -74,6 +84,7 @@ environment:
 ```
 
 ### Common Settings
+
 ```yaml
 # Server
 GF_SERVER_ROOT_URL=http://localhost:3000
@@ -96,16 +107,19 @@ GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-piechart-panel
 ### Change Admin Password
 
 **On First Login:**
+
 1. Navigate to `http://localhost:3000`
 2. Login with `admin/admin`
 3. Follow password change prompt
 
 **Later Changes:**
+
 1. Click user icon (bottom left)
 2. Select "Change password"
 3. Enter new password
 
 **Via Environment Variable:**
+
 ```yaml
 environment:
   - GF_SECURITY_ADMIN_PASSWORD=secure_password_here
@@ -114,21 +128,25 @@ environment:
 ## 📦 Adding Data Sources
 
 ### Prometheus
+
 - **Type:** Prometheus
 - **URL:** `http://prometheus:9090`
 - **Auth:** None (unless configured)
 
 ### InfluxDB
+
 - **Type:** InfluxDB
 - **URL:** `http://influxdb:8086`
 - **Database:** Your database name
 
 ### Elasticsearch
+
 - **Type:** Elasticsearch
 - **URL:** `http://elasticsearch:9200`
 - **Index:** Your index pattern
 
 ### Loki (Logs)
+
 - **Type:** Loki
 - **URL:** `http://loki:3100`
 
@@ -137,6 +155,7 @@ environment:
 ### Dashboard Types
 
 **Basic Panel Types:**
+
 - Graph (Time series)
 - Table
 - Stat
@@ -147,6 +166,7 @@ environment:
 - Alert list
 
 ### Best Practices
+
 1. Use descriptive panel titles
 2. Add units to metrics (CPU %, Memory MB, etc.)
 3. Set appropriate time ranges
@@ -156,6 +176,7 @@ environment:
 ## 💾 Data Persistence
 
 ### Volume Management
+
 ```bash
 # Check volume
 docker volume inspect grafana_storage
@@ -176,6 +197,7 @@ docker run --rm \
 ## 🔒 Security Considerations
 
 ### Recommendations
+
 - ✅ Change default admin password
 - ✅ Disable anonymous access if not needed
 - ✅ Use HTTPS in production (configure proxy)
@@ -184,6 +206,7 @@ docker run --rm \
 - ✅ Keep Grafana updated
 
 ### Behind Reverse Proxy
+
 ```yaml
 environment:
   - GF_SERVER_ROOT_URL=https://grafana.example.com
@@ -194,12 +217,14 @@ environment:
 ## 🔌 Available Plugins
 
 Install plugins via environment variable:
+
 ```yaml
 environment:
   - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-piechart-panel,redis-datasource
 ```
 
 Popular plugins:
+
 - `grafana-clock-panel` — Clock visualization
 - `grafana-piechart-panel` — Pie chart panel
 - `redis-datasource` — Redis data source
@@ -208,6 +233,7 @@ Popular plugins:
 ## 🆘 Troubleshooting
 
 **Can't Access Web UI:**
+
 ```bash
 # Check if container is running
 docker ps | grep grafana
@@ -220,6 +246,7 @@ netstat -an | grep 3000
 ```
 
 **Forgot Admin Password:**
+
 ```bash
 # Stop container
 docker-compose down
@@ -234,6 +261,7 @@ docker-compose up -d
 ```
 
 **Data Source Connection Failed:**
+
 ```bash
 # Check data source URL
 # If using docker network, use container name instead of localhost
@@ -244,6 +272,7 @@ docker-compose up -d
 ```
 
 **Dashboards Not Appearing:**
+
 ```bash
 # Check dashboard provisioning
 docker exec <grafana_container> \
@@ -259,13 +288,11 @@ docker exec <grafana_container> \
 
 ## 🧹 Cleanup
 
-### Remove Service
 ```bash
+# Remove Service
 docker-compose down
-```
 
-### Remove with Data
-```bash
+# Remove with Data
 docker-compose down -v
 ```
 
@@ -281,16 +308,19 @@ docker-compose down -v
 ## 📋 Common Workflows
 
 ### Monitor Docker Containers
+
 1. Add data source: Prometheus
 2. Import dashboard: "Docker and system monitoring"
 3. Visualize container metrics
 
 ### Track Application Metrics
+
 1. Instrument app with metrics library
 2. Export metrics to Prometheus
 3. Create custom dashboards in Grafana
 
 ### Log Aggregation
+
 1. Set up Loki with log shipper
 2. Add Loki data source
 3. Create log panels with LogQL queries

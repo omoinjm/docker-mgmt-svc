@@ -25,7 +25,11 @@ docker run -d --name ollama-server -p 11434:11434 -v ollama-models:/root/.ollama
 ## API payload
 
 ```bash
-
+curl http://localhost:11434/api/generate \
+-d '{
+  "model": "llama3.2",
+  "prompt": "Why is the sky blue?"
+}'
 ```
 
 ## Models to pick from
