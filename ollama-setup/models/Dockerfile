@@ -8,9 +8,10 @@ RUN mkdir -p /root/.ollama
 RUN ollama serve & \
   SERVER_PID=$! && \
   sleep 5 && \
-  ollama pull deepseek-coder:latest && \
-  # ollama pull qwen2.5vl:32b && \
-  # ollama pull gpt-oss:20b && \
+  ollama pull deepseek-coder:latest & \
+  ollama pull gpt-oss:20b & \
+  ollama pull llama3.2 & \
+  ollama pull qwen2.5:7b & \
   kill $SERVER_PID && \
   sleep 2
 
