@@ -1,8 +1,11 @@
 # More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
+version: '3.8'
+
 services:
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
+    restart: unless-stopped
     ports:
       # DNS Ports
       - "53:53/tcp"
@@ -23,7 +26,6 @@ services:
       FTLCONF_webserver_api_password: 'correct horse battery staple'
       # If using Docker's default `bridge` network setting the dns listening mode should be set to 'ALL'
       FTLCONF_dns_listeningMode: 'ALL'
-
       DNSMASQ_LISTENING: "all"
       PIHOLE_DNS_1: "unbound#53"
     # Volumes store your data between container upgrades
@@ -43,25 +45,42 @@ services:
       - NET_RAW
       - CAP_SYS_NICE
       - CAP_SYS_TIME
-    restart: unless-stopped
     networks:
       dns_network:
     security_opt:
       - seccomp:unconfined
     depends_on:
-      - unbound
+      unbound:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "dig", "@127.0.0.1", "google.com"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
   unbound:
     container_name: unbound
     image: klutchell/unbound:latest
+    restart: unless-stopped
     volumes:
        - unbound_data:/etc/unbound/custom.conf.d
-    restart: unless-stopped
     networks:
       dns_network:
+    healthcheck:
+      test: ["CMD", "dig", "@127.0.0.1", "google.com"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
 networks:
   dns_network:
+    name: dns_network
     driver: bridge
+
 volumes:
   pihole_data:
   dnsmasq_data:
   unbound_data:
+

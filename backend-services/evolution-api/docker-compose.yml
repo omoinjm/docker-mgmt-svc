@@ -1,7 +1,12 @@
+version: '3.8'
+
 services:
   evolution-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: evolution_api
-    image: atendai/evolution-api:latest
+    image: evolution-api:latest
     restart: always
     ports:
       - "8080:8080"
@@ -12,8 +17,16 @@ services:
     networks:
       - evolution-net
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
 
   postgres:
     container_name: postgres
@@ -32,6 +45,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     expose:
       - "5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     container_name: redis
@@ -44,6 +62,11 @@ services:
       - evolution_redis:/data
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   evolution_instances:

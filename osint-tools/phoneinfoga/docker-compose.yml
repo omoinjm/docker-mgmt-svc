@@ -1,9 +1,28 @@
+version: '3.8'
+
 services:
   phoneinfoga:
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: phoneinfoga
+    image: phoneinfoga:latest
     restart: on-failure
-    image: sundowndev/phoneinfoga:latest
-    command:
-      - "serve"
     ports:
       - "85:5000"
+    networks:
+      - phoneinfoga-net
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+networks:
+  phoneinfoga-net:
+    name: phoneinfoga-net
+    driver: bridge
+

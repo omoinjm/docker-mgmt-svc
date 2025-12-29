@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  ollama-base:
+    build:
+      context: ./base
+      dockerfile: Dockerfile
+    container_name: ollama-base
+    image: ollama-base:latest
+    expose:
+      - "11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - ollama-net
+    restart: unless-stopped
+
+  ollama-models:
+    build:
+      context: ./models
+      dockerfile: Dockerfile
+    container_name: ollama-models
+    image: ollama-models:latest
+    depends_on:
+      - ollama-base
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - ollama-net
+    restart: unless-stopped
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+
+volumes:
+  ollama_data:
+
+networks:
+  ollama-net:
+    name: ollama-net
+    driver: bridge

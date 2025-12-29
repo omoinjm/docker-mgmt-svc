@@ -103,11 +103,12 @@ docker run -d ollama-deepseek
 
 #### 3. **devops-infra/** — DevOps & Infrastructure
 
-**Purpose:** Monitoring, observability, and network management tools  
+**Purpose:** Monitoring, observability, reverse proxy, and network management tools  
 **Services:**
 
 - `grafana/` — Monitoring and visualization dashboards
 - `pi-hole/` — DNS-level ad blocking and network filtering
+- `nginx-proxy-manager/` — Reverse proxy and load balancer for routing traffic to all services
 
 **Typical Use:**
 

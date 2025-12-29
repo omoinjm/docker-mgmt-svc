@@ -1,9 +1,27 @@
+version: '3.8'
+
 services:
   sherlock:
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: sherlock
-    image: sherlock/sherlock
+    image: sherlock:latest
     volumes:
       - sherlock_results:/opt/sherlock/results/
+    networks:
+      - sherlock-net
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+    stdin_open: true
+    tty: true
 
 volumes:
   sherlock_results:
+
+networks:
+  sherlock-net:
+    name: sherlock-net
+    driver: bridge
+
