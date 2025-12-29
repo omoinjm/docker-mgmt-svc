@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  portainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: portainer
+    image: portainer:latest
+    restart: unless-stopped
+    ports:
+      - "9000:9000"  # Web UI Port
+      - "8000:8000"  # Edge Agent Port
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+    networks:
+      - portainer-net
+    environment:
+      - TZ=UTC
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  portainer_data:
+
+networks:
+  portainer-net:
+    name: portainer-net
+    driver: bridge
