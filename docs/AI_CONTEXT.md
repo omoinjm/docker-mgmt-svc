@@ -82,21 +82,31 @@ docker-compose up --build
 **Purpose:** Local AI model runtime and machine learning environments  
 **Services:**
 
-- `ollama-setup/` — Ollama runtime with customizable model stacks
-  - `base/` — Base Docker image for all AI setups
-  - `models/` — Custom model configurations (DeepSeek, etc.)
+- `ollama-setup/` — Ollama runtime with multi-stage base + model setup
+  - `base/` — Base Docker image for Ollama
+  - `models/` — Custom model configurations (DeepSeek, Llama3.2, etc.)
+- `ollama-setup-v2/` — Simplified Ollama v2 runtime with automatic model pulling
+  - Single-stage build with integrated model setup script
+  - Supports various model sizes and types
 
 **Architecture:**
 
-- Multi-layer approach: base image + model-specific customizations
+- Multi-layer approach with base images + model-specific customizations
 - Includes startup scripts for model initialization
+- GPU acceleration support (optional)
+- REST API for inference
 
 **Typical Use:**
 
 ```bash
-cd ai-ml/ollama-setup/models
-docker build -t ollama-deepseek .
-docker run -d ollama-deepseek
+cd ai-ml/ollama-setup
+docker build -t ollama-base -f base/Dockerfile .
+docker-compose up --build
+
+# OR
+
+cd ai-ml/ollama-setup-v2
+docker-compose up --build
 ```
 
 ---
@@ -362,6 +372,66 @@ When working with this repository, follow this mental model:
 3. **Include templates** — provide `.env.example` files
 4. **Write clear docs** — service-specific README.md
 5. **Reference this guide** — link back to organizational principles
+6. **Update root README** — document the new/changed service (see below)
+
+### When Updating Root README:
+
+**CRITICAL:** Every time a service is added or significantly modified, the root `README.md` MUST be updated to reflect changes.
+
+**Root README Sections to Update:**
+
+1. **Repository Structure** section
+   - Add new service to ASCII tree
+   - Show folder hierarchy
+   - Indicate service type/purpose
+
+2. **Quick Start** or **Services Overview** section
+   - Add entry for new service
+   - Include port mappings
+   - Describe purpose and typical use
+
+3. **Category Descriptions** (if applicable)
+   - Update category descriptions to include new service
+   - Explain how it integrates with existing services
+   - Add any new use case categories
+
+**Example Update (when adding a service):**
+
+```markdown
+# Before:
+## Quick Start
+- **Grafana** (Port 3000) - Monitoring dashboards
+- **Pi-hole** (Port 53) - DNS filtering
+
+# After:
+## Quick Start
+- **Grafana** (Port 3000) - Monitoring dashboards
+- **Pi-hole** (Port 53) - DNS filtering
+- **Portainer** (Port 9000) - Docker management UI
+```
+
+**When to Update Root README:**
+
+✅ Add new service category (e.g., osint-tools, devops-infra)
+✅ Add new service to existing category
+✅ Major changes to service architecture
+✅ New port assignments or public-facing endpoints
+✅ Change in service purpose or dependencies
+✅ Service deprecation or removal
+
+❌ Do NOT update for:
+- Internal refactoring without external changes
+- Documentation-only updates in service README
+- Bug fixes that don't affect functionality
+
+**How to Update:**
+
+1. View the root `README.md` file
+2. Locate relevant section (Structure, Quick Start, Services)
+3. Add new service entry in same format as existing entries
+4. Update repository structure ASCII tree if needed
+5. Add brief description and port mapping
+6. Commit with message: `docs: Update README for [service-name]`
 
 ### When Troubleshooting:
 
@@ -394,6 +464,159 @@ docker-compose down
 
 # Clean up
 docker system prune -a
+```
+
+---
+
+## 📖 Maintaining the Root README.md
+
+**IMPORTANT:** The root `README.md` is the main entry point for this repository. It must stay current with all service additions and changes.
+
+### What the Root README Contains
+
+The root `README.md` should include:
+
+1. **Project Overview** — What this repository is for
+2. **Repository Structure** — ASCII tree showing all categories and services
+3. **Quick Start Guide** — How to run services
+4. **Services Directory** — List of all services with:
+   - Service name
+   - Port mappings
+   - Brief description
+   - Typical use case
+
+### Updating the Root README — Step-by-Step
+
+**When you add a new service:**
+
+1. Open `README.md` (root level)
+
+2. Locate the **Repository Structure** section (typically near top)
+
+3. Add the new service to the ASCII tree:
+   ```
+   Before:
+   docker-mgmt-svc/
+   └── devops-infra/
+       ├── grafana/
+       └── pi-hole/
+   
+   After:
+   docker-mgmt-svc/
+   └── devops-infra/
+       ├── grafana/
+       ├── pi-hole/
+       └── portainer/  ← NEW
+   ```
+
+4. Find the **Services Overview** or **Quick Start** section
+
+5. Add a new entry in the same format as existing services:
+   ```markdown
+   ### Portainer (Port 9000)
+   **Category:** DevOps Infrastructure  
+   **Purpose:** Docker container management UI
+   **Quick Start:** `cd devops-infra/portainer && docker-compose up -d`
+   ```
+
+6. Save the file
+
+7. Commit with message:
+   ```bash
+   git commit -m "docs: Add Portainer service to README"
+   ```
+
+### Service Entry Format
+
+Use this consistent format for all service entries in the README:
+
+```markdown
+### Service Name (Port XXXX)
+**Category:** Category Name  
+**Purpose:** Brief description (1-2 sentences)  
+**Environment:** Technologies used  
+**Quick Start:** Command to start the service  
+**Documentation:** Link to service README
+```
+
+### Example: Adding Ollama v2
+
+```markdown
+### Ollama v2 (Port 11434)
+**Category:** AI & Machine Learning  
+**Purpose:** Local LLM inference with automatic model pulling  
+**Environment:** Docker, Python  
+**Quick Start:** `cd ai-ml/ollama-setup-v2 && docker-compose up -d`  
+**Documentation:** [Ollama v2 README](ai-ml/ollama-setup-v2/README.md)
+```
+
+### Updating the ASCII Tree
+
+Always maintain the ASCII tree structure to show:
+- Categories (folders)
+- Services within each category
+- Key files (docker-compose.yml, Dockerfile, README.md)
+
+Format:
+```
+docker-mgmt-svc/
+├── category-name/
+│   ├── service-1/
+│   │   ├── docker-compose.yml
+│   │   ├── Dockerfile
+│   │   └── README.md
+│   └── service-2/
+│       ├── docker-compose.yml
+│       └── Dockerfile
+└── docs/
+    └── AI_CONTEXT.md
+```
+
+### What Sections to Update
+
+| Section | Update When | Example |
+|---------|------------|---------|
+| Structure tree | New service added | Add folder to tree |
+| Quick Start | New public-facing service | Add port + command |
+| Services List | Any service added/removed | Add/remove entry |
+| Port Mappings Table | Port changes | Update table row |
+| Category Descriptions | New category created | Add category section |
+
+### What NOT to Update Root README For
+
+❌ Internal refactoring (no external changes)  
+❌ Service README-only updates  
+❌ Bug fixes (no functionality changes)  
+❌ Version bumps (unless breaking changes)  
+❌ Script improvements (unless interface changes)
+
+### README Consistency Checklist
+
+Before committing README changes, verify:
+
+- [ ] Service appears in ASCII tree
+- [ ] Service has entry in Quick Start section
+- [ ] Port mapping is correct
+- [ ] Category is correct
+- [ ] Description is clear and concise
+- [ ] All services alphabetically ordered (if applicable)
+- [ ] Links to service README are correct
+- [ ] No duplicate entries
+
+### Commit Message Examples
+
+```bash
+# Adding a new service
+git commit -m "docs: Add Portainer service to README"
+
+# Adding a new category
+git commit -m "docs: Add container-management category to README"
+
+# Updating service entry
+git commit -m "docs: Update Evolution API port mapping in README"
+
+# Reorganizing structure
+git commit -m "docs: Reorganize README service listings"
 ```
 
 ---
