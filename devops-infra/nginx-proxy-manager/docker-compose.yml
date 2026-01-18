@@ -16,15 +16,28 @@ services:
     networks:
       - npm-net
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=UTC
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:81/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+      PUID: 1000
+      PGID: 1000
+      TZ: UTC
+      # Postgres parameters:
+      DB_POSTGRES_HOST: "db"
+      DB_POSTGRES_PORT: "5432"
+      DB_POSTGRES_USER: "npm"
+      DB_POSTGRES_PASSWORD: "npmpass"
+      DB_POSTGRES_NAME: "npm"
+      # Uncomment this if IPv6 is not enabled on your host
+      # DISABLE_IPV6: 'true'
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: "npm"
+      POSTGRES_PASSWORD: "npmpass"
+      POSTGRES_DB: "npm"
+    volumes:
+      - ./postgresql:/var/lib/postgresql
 
 volumes:
   npm_data:
