@@ -21,3 +21,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
 
 # Use default entrypoint from base image
 CMD ["dumb-init", "/init"]
+
