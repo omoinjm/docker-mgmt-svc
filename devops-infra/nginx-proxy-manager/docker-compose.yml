@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   nginx-proxy-manager:
     build:
@@ -9,9 +7,9 @@ services:
     image: nginx-proxy-manager:latest
     restart: unless-stopped
     ports:
-      - "80:80"       # Public HTTP Port
-      - "443:443"     # Public HTTPS Port
-      - "81:81"       # Admin Web UI Port
+      - "80:80" # Public HTTP Port
+      - "443:443" # Public HTTPS Port
+      - "81:81" # Admin Web UI Port
     volumes:
       - npm_data:/data
       - npm_letsencrypt:/etc/letsencrypt
