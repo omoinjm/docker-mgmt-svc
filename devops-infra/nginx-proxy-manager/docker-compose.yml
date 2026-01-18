@@ -1,25 +1,13 @@
 services:
-  nginx-proxy-manager:
-    container_name: nginx-proxy-manager
-    image: jc21/nginx-proxy-manager:latest
+  app:
+    image: "jc21/nginx-proxy-manager:latest"
     restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-      - "81:81"
-    volumes:
-      - npm_data:/data
-      - npm_letsencrypt:/etc/letsencrypt
-    networks:
-      - npm-net
     environment:
       TZ: "Africa/Johannesburg"
-
-volumes:
-  npm_data:
-  npm_letsencrypt:
-
-networks:
-  npm-net:
-    name: npm-net
-    driver: bridge
+    ports:
+      - "80:80"
+      - "81:81"
+      - "443:443"
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
