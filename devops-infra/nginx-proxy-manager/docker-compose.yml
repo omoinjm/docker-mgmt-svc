@@ -1,10 +1,7 @@
 services:
   nginx-proxy-manager:
-    build:
-      context: .
-      dockerfile: Dockerfile
     container_name: nginx-proxy-manager
-    image: nginx-proxy-manager:latest
+    image: jc21/nginx-proxy-manager:latest
     restart: unless-stopped
     ports:
       - "80:80" # Public HTTP Port
@@ -16,10 +13,6 @@ services:
     networks:
       - npm-net
     environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: UTC
-      # Postgres parameters:
       DB_POSTGRES_HOST: "db"
       DB_POSTGRES_PORT: "5432"
       DB_POSTGRES_USER: "npm"
@@ -37,11 +30,12 @@ services:
       POSTGRES_PASSWORD: "npmpass"
       POSTGRES_DB: "npm"
     volumes:
-      - ./postgresql:/var/lib/postgresql
+      - npm_postgresql:/var/lib/postgresql
 
 volumes:
   npm_data:
   npm_letsencrypt:
+  npm_postgresql:
 
 networks:
   npm-net:
