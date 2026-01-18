@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   portainer:
@@ -9,8 +9,8 @@ services:
     image: portainer:latest
     restart: unless-stopped
     ports:
-      - "9000:9000"  # Web UI Port
-      - "8000:8000"  # Edge Agent Port
+      - "9000:9000" # Web UI Port
+      - "8000:8000" # Edge Agent Port
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - portainer_data:/data
