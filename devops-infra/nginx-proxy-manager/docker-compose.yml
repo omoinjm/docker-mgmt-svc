@@ -14,30 +14,37 @@ services:
       - npm-net
     environment:
       TZ: "South Africa/Johannesburg"
-      # Postgres parameters:
-      DB_POSTGRES_HOST: "db"
-      DB_POSTGRES_PORT: "5432"
-      DB_POSTGRES_USER: "npm"
-      DB_POSTGRES_PASSWORD: "npmpass"
-      DB_POSTGRES_NAME: "npm"
+      # Mysql/Maria connection parameters:
+      DB_MYSQL_HOST: "db"
+      DB_MYSQL_PORT: 3306
+      DB_MYSQL_USER: "npm"
+      DB_MYSQL_PASSWORD: "npm"
+      DB_MYSQL_NAME: "npm"
+      # Optional SSL (see section below)
+      # DB_MYSQL_SSL: 'true'
+      # DB_MYSQL_SSL_REJECT_UNAUTHORIZED: 'true'
+      # DB_MYSQL_SSL_VERIFY_IDENTITY: 'true'
       # Uncomment this if IPv6 is not enabled on your host
       # DISABLE_IPV6: 'true'
     depends_on:
       - db
 
   db:
-    image: postgres:17
+    image: "jc21/mariadb-aria:latest"
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: "npm"
-      POSTGRES_PASSWORD: "npmpass"
-      POSTGRES_DB: "npm"
+      MYSQL_ROOT_PASSWORD: "npm"
+      MYSQL_DATABASE: "npm"
+      MYSQL_USER: "npm"
+      MYSQL_PASSWORD: "npm"
+      MARIADB_AUTO_UPGRADE: "1"
     volumes:
-      - npm_postgresql:/var/lib/postgresql
+      - npm_mysql:/var/lib/mysql
 
 volumes:
   npm_data:
   npm_letsencrypt:
-  npm_postgresql:
+  npm_mysql:
 
 networks:
   npm-net:
