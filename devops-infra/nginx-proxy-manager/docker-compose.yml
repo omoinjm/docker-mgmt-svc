@@ -13,6 +13,8 @@ services:
     networks:
       - npm-net
     environment:
+      TZ: "South Africa/Johannesburg"
+      # Postgres parameters:
       DB_POSTGRES_HOST: "db"
       DB_POSTGRES_PORT: "5432"
       DB_POSTGRES_USER: "npm"
