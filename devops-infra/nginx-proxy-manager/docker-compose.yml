@@ -26,25 +26,25 @@ services:
       # DB_MYSQL_SSL_VERIFY_IDENTITY: 'true'
       # Uncomment this if IPv6 is not enabled on your host
       # DISABLE_IPV6: 'true'
-    depends_on:
-      - db
+    #depends_on:
+    #  - db
 
-  db:
-    image: "jc21/mariadb-aria:latest"
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: "npm"
-      MYSQL_DATABASE: "npm"
-      MYSQL_USER: "npm"
-      MYSQL_PASSWORD: "npm"
-      MARIADB_AUTO_UPGRADE: "1"
-    volumes:
-      - npm_mysql:/var/lib/mysql
+  #db:
+  #  image: "jc21/mariadb-aria:latest"
+  #  restart: unless-stopped
+  #  environment:
+  #    MYSQL_ROOT_PASSWORD: "npm"
+  #    MYSQL_DATABASE: "npm"
+  #    MYSQL_USER: "npm"
+  #    MYSQL_PASSWORD: "npm"
+  #    MARIADB_AUTO_UPGRADE: "1"
+  #  volumes:
+  #    - npm_mysql:/var/lib/mysql
 
 volumes:
   npm_data:
   npm_letsencrypt:
-  npm_mysql:
+  # npm_mysql:
 
 networks:
   npm-net:
