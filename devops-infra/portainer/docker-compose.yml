@@ -13,20 +13,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - portainer_data:/data
     networks:
-      - portainer-net
+      - nginxproxymanager_default
     environment:
       - TZ=UTC
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
 
 volumes:
   portainer_data:
 
 networks:
-  portainer-net:
-    name: portainer-net
-    driver: bridge
+  nginxproxymanager_default:
+    external: true
