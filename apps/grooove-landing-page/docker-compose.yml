@@ -1,0 +1,29 @@
+services:
+  landing-page:
+    image: registry.digitalocean.com/groooveza/landing-page:latest
+    container_name: landing-page
+    restart: always
+    ports:
+      - "5051:80"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - nginx-proxy-manager_default
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json:ro
+    command: >
+      --interval 60
+      --cleanup
+      --label-enable
+    environment:
+      - DOCKER_CONFIG=/config.json
+
+networks:
+  nginx-proxy-manager_default:
+    external: true
