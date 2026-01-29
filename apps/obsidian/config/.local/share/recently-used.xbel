@@ -13,4 +13,14 @@
       </metadata>
     </info>
   </bookmark>
+  <bookmark href="file:///var/lib/obsidian/vaults/aws-restart-portfolio" added="2026-01-28T12:00:00.692953Z" modified="2026-01-28T12:00:09.973302Z" visited="2026-01-28T12:00:00.692954Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="inode/directory"/>
+        <bookmark:applications>
+          <bookmark:application name="obsidian" exec="&apos;obsidian %u&apos;" modified="2026-01-28T12:00:09.973296Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
 </xbel>

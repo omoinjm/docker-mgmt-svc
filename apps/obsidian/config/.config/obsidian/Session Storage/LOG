@@ -1,2 +1,3 @@
-2026/01/28-11:24:35.643 204 Creating DB /config/.config/obsidian/Session Storage since it was missing.
-2026/01/28-11:24:35.664 204 Reusing MANIFEST /config/.config/obsidian/Session Storage/MANIFEST-000001
+2026/01/28-11:59:15.959 204 Reusing MANIFEST /config/.config/obsidian/Session Storage/MANIFEST-000001
+2026/01/28-11:59:15.959 204 Recovering log #3
+2026/01/28-11:59:15.960 204 Reusing old log /config/.config/obsidian/Session Storage/000003.log 
