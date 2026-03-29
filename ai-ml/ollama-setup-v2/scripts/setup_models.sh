@@ -16,7 +16,7 @@ max_attempts=30
 attempt=0
 
 while [ $attempt -lt $max_attempts ]; do
-  if curl -s http://localhost:11434 > /dev/null 2>&1; then
+  if curl -s http://localhost:11434 >/dev/null 2>&1; then
     echo "✅ Ollama server is ready!"
     break
   fi
@@ -34,26 +34,30 @@ echo ""
 echo "📦 Pulling models..."
 echo ""
 
-# Chat & Reasoning Models
-echo "→ Pulling reasoning model: deepseek-r1:8b"
-ollama pull deepseek-r1:8b
-
-echo "→ Pulling reasoning model: deepseek-r1:70b (large)"
-ollama pull deepseek-r1:70b
+## Chat & Reasoning Models
+#echo "→ Pulling reasoning model: deepseek-r1:8b"
+## ollama pull deepseek-r1:8b
+#
+#echo "→ Pulling reasoning model: deepseek-r1:70b (large)"
+#ollama pull deepseek-r1:70b
 
 # General Purpose Models
-echo "→ Pulling general model: llama3.1:8b"
-ollama pull llama3.1:8b
+echo "→ Pulling general model: llama3.2"
+ollama pull llama3.2
 
-echo "→ Pulling general model: llama3.1:70b (large)"
-ollama pull llama3.1:70b
+# Embedding Model
+echo "→ Pulling embedding model: nomic-embed-text"
+ollama pull nomic-embed-text
 
-# Text Generation Models
-echo "→ Pulling text model: llama2:7b"
-ollama pull llama2:7b
-
-echo "→ Pulling text model: llama2:70b (large)"
-ollama pull llama2:70b
+#echo "→ Pulling general model: llama3.1:70b (large)"
+#ollama pull llama3.1:70b
+#
+## Text Generation Models
+#echo "→ Pulling text model: llama2:7b"
+#ollama pull llama2:7b
+#
+#echo "→ Pulling text model: llama2:70b (large)"
+#ollama pull llama2:70b
 
 echo ""
 echo "=========================================="
