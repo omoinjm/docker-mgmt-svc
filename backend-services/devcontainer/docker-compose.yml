@@ -1,0 +1,64 @@
+services:
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - ai-net
+    restart: unless-stopped
+    # Uncomment to enable GPU passthrough (requires nvidia-container-toolkit)
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+  openclaw:
+    build:
+      context: ./openclaw
+    image: openclaw:latest
+    container_name: openclaw
+    environment:
+      - OLLAMA_API_KEY=ollama-local
+      - OLLAMA_BASE_URL=http://ollama:11434
+    volumes:
+      - openclaw_state:/home/vscode/.openclaw
+    ports:
+      - "18789:18789"
+    networks:
+      - ai-net
+    depends_on:
+      - ollama
+    stdin_open: true
+    tty: true
+
+  claude-code:
+    build:
+      context: ./claude-code
+    image: claude-code:latest
+    container_name: claude-code
+    environment:
+      - OPENAI_API_BASE=http://ollama:11434/v1
+      - OPENAI_API_KEY=ollama-local
+    volumes:
+      - ./claude-code:/workspace
+    networks:
+      - ai-net
+    depends_on:
+      - ollama
+    stdin_open: true
+    tty: true
+
+networks:
+  ai-net:
+    driver: bridge
+
+volumes:
+  ollama_data:
+  openclaw_state:

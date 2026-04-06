@@ -1,0 +1,13 @@
+{
+  "name": "base",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "USER_ID": "1000",
+      "GROUP_ID": "1000",
+      "USERNAME": "vscode"
+    }
+  },
+  "remoteUser": "vscode",
+  "postCreateCommand": "zsh --login"
+}
