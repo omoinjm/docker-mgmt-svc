@@ -84,14 +84,13 @@ http://localhost:3000
 
 ### Environment Variables
 
-Edit in `docker-compose.yml`:
+Edit in `.env`:
 
-```yaml
-environment:
-  - GF_SERVER_ROOT_URL=http://my.grafana.server/
-  - GF_SECURITY_ADMIN_PASSWORD=newpassword
-  - GF_USERS_ALLOW_SIGN_UP=false
-  - GF_INSTALL_PLUGINS=grafana-piechart-panel
+```bash
+GF_SERVER_ROOT_URL=http://my.grafana.server/
+GF_SECURITY_ADMIN_PASSWORD=newpassword
+GF_USERS_ALLOW_SIGN_UP=false
+GF_INSTALL_PLUGINS=grafana-piechart-panel
 ```
 
 ### Common Settings
@@ -131,9 +130,10 @@ GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-piechart-panel
 
 **Via Environment Variable:**
 
-```yaml
-environment:
-  - GF_SECURITY_ADMIN_PASSWORD=secure_password_here
+Edit in `.env`:
+
+```bash
+GF_SECURITY_ADMIN_PASSWORD=secure_password_here
 ```
 
 ## 📦 Adding Data Sources
@@ -227,11 +227,10 @@ environment:
 
 ## 🔌 Available Plugins
 
-Install plugins via environment variable:
+Install plugins via environment variable in `.env`:
 
-```yaml
-environment:
-  - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-piechart-panel,redis-datasource
+```bash
+GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-piechart-panel,redis-datasource
 ```
 
 Popular plugins:
@@ -262,7 +261,7 @@ netstat -an | grep 3000
 # Stop container
 docker-compose down
 
-# Edit docker-compose.yml and change environment:
+# Edit .env and change:
 # GF_SECURITY_ADMIN_PASSWORD=newpassword
 
 # Restart

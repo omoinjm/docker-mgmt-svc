@@ -1,0 +1,50 @@
+groups:
+  - name: zombie_processes
+    interval: 30s
+    rules:
+      # CRITICAL: This would have caught your exact problem!
+      - alert: ZombieProcessDetected
+        expr: node_processes_zombies > 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Zombie processes detected on {{ $labels.instance }}"
+          description: "{{ $value }} zombie processes are accumulating. Check for parent processes not reaping children."
+
+      - alert: HighZombieCount
+        expr: node_processes_zombies > 10
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High number of zombie processes!"
+          description: "{{ $value }} zombie processes detected. Immediate investigation required."
+
+  - name: system_health
+    rules:
+      - alert: HighCPULoad
+        expr: node_load1 > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High system load"
+
+      - alert: HighProcessCount
+        expr: count(node_processes_state{state="running"}) > 500
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Unusual number of processes"
+          description: "System has {{ $value }} running processes. Possible fork bomb or process leak."
+
+      - alert: ProcessCreationRateHigh
+        expr: rate(node_processes_forks[5m]) > 100
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High process creation rate"
+          description: "Processes being created at {{ $value }}/second. Potential fork bomb."

@@ -1,35 +1,203 @@
-version: '3.8'
-
 services:
+  # ============================================
+  # GRAFANA - Visualization
+  # ============================================
   grafana:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: grafana
-    image: grafana:latest
+    image: ${GRAFANA_IMAGE:-grafana/grafana:latest}
+    container_name: ${CONTAINER_NAME:-grafana}
     restart: unless-stopped
+    init: true # ✅ CRITICAL: Prevents zombies in Grafana itself
     environment:
-      - GF_SERVER_ROOT_URL=http://localhost:3000/
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_PLUGINS_PREINSTALL=grafana-clock-panel
+      - GF_SERVER_ROOT_URL=${GF_SERVER_ROOT_URL}
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_PLUGINS_PREINSTALL=${GF_PLUGINS_PREINSTALL}
+      - GF_INSTALL_PLUGINS=${GF_INSTALL_PLUGINS}
+      - GF_AUTH_ANONYMOUS_ENABLED=${GF_AUTH_ANONYMOUS_ENABLED}
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=${GF_AUTH_ANONYMOUS_ORG_ROLE}
+      - GF_USERS_ALLOW_SIGN_UP=${GF_USERS_ALLOW_SIGN_UP:-false}
+      - GF_USERS_ALLOW_ORG_CREATE=${GF_USERS_ALLOW_ORG_CREATE:-false}
+      - GF_AUTH_DISABLE_LOGIN_FORM=${GF_AUTH_DISABLE_LOGIN_FORM:-false}
+      - GF_LOG_LEVEL=${GF_LOG_LEVEL:-info}
+      - GF_SESSION_LIFE_TIME=${GF_SESSION_LIFE_TIME:-720}
+      - TZ=${TZ:-UTC}
     ports:
       - "3000:3000"
     volumes:
-      - "grafana_storage:/var/lib/grafana"
+      - grafana_storage:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning # ✅ Auto-configure data sources
     networks:
-      - grafana-net
+      - monitoring-net
+    depends_on:
+      - prometheus
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 5s
+      start_period: 10s
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  # ============================================
+  # PROMETHEUS - Time Series Database
+  # ============================================
+  prometheus:
+    image: ${PROMETHEUS_IMAGE:-prom/prometheus:latest}
+    container_name: prometheus
+    restart: unless-stopped
+    init: true # ✅ Prevents zombies
+    environment:
+      - TZ=${TZ:-UTC}
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_storage:/prometheus
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/alerts.yml:/etc/prometheus/alerts.yml:ro # ✅ Alert rules
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=${PROMETHEUS_RETENTION_TIME:-30d}"
+      - "--web.enable-lifecycle"
+    networks:
+      - monitoring-net
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9090/-/healthy",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # NODE EXPORTER - Host Metrics (CRITICAL for zombie detection!)
+  # ============================================
+  node_exporter:
+    image: ${NODE_EXPORTER_IMAGE:-prom/node-exporter:latest}
+    container_name: node_exporter
+    restart: unless-stopped
+    init: true
+    environment:
+      - TZ=${TZ:-UTC}
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/host/root"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)"
+      - "--collector.processes" # ✅ Enables zombie process monitoring!
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host/root:ro
+    networks:
+      - monitoring-net
+    pid: host # ✅ Allows seeing host processes
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9100/-/healthy",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # CADVISOR - Container Metrics
+  # ============================================
+  cadvisor:
+    image: ${CADVISOR_IMAGE:-gcr.io/cadvisor/cadvisor:latest}
+    container_name: cadvisor
+    restart: unless-stopped
+    init: true
+    environment:
+      - TZ=${TZ:-UTC}
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    privileged: true
+    networks:
+      - monitoring-net
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8080/healthz",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ============================================
+  # ALERTMANAGER - Send Notifications
+  # ============================================
+  alertmanager:
+    image: ${ALERTMANAGER_IMAGE:-prom/alertmanager:latest}
+    container_name: alertmanager
+    restart: unless-stopped
+    init: true
+    environment:
+      - TZ=${TZ:-UTC}
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.template:ro
+      - alertmanager_storage:/alertmanager
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+    entrypoint:
+      - sh
+      - -c
+      - |
+        # Substitute environment variables in the config template
+        sed "s|\\\$\\{DISCORD_WEBHOOK_URL\\}|$${DISCORD_WEBHOOK_URL}|g" /etc/alertmanager/alertmanager.template > /etc/alertmanager/alertmanager.yml
+        exec /bin/alertmanager "$$@"
+    networks:
+      - monitoring-net
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:9093/-/healthy",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   grafana_storage:
+  prometheus_storage:
+  alertmanager_storage:
 
 networks:
-  grafana-net:
-    name: grafana-net
+  monitoring-net:
+    name: monitoring-net
     driver: bridge
-
