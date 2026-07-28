@@ -12,14 +12,14 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - portainer_data:/data
-    networks:
-      - nginxproxymanager_default
+    # networks:
+    #  - nginxproxymanager_default
     environment:
       - TZ=UTC
 
 volumes:
   portainer_data:
 
-networks:
-  nginxproxymanager_default:
-    external: true
+# networks:
+#   nginxproxymanager_default:
+#     external: true
