@@ -87,6 +87,21 @@ Then open **http://localhost:18789** in your browser.
 aider --model ollama/qwen2.5-coder:7b
 ```
 
+## Shell access
+
+Open an interactive shell in a running container:
+
+```sh
+# Via run.sh (zsh)
+./run.sh shell-openclaw
+./run.sh shell-claude-code
+
+# Via docker exec
+docker exec -it openclaw zsh
+docker exec -it claude-code zsh
+docker exec -it ollama bash    # ollama image has no zsh
+```
+
 ## GPU Acceleration (optional)
 
 Uncomment the `deploy` block in `docker-compose.yml` under the `ollama` service:
