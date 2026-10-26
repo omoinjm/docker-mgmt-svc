@@ -3,8 +3,18 @@ services:
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
-    ports:
-      - "11434:11434"
+    # Not published to the host: only openclaw/claude-code need it, via the
+    # internal ai-net network (http://ollama:11434). Avoids clashing with a
+    # native `ollama serve` on the host, which also wants port 11434.
+    environment:
+      # Keep a loaded model resident instead of unloading after Ollama's
+      # default 5m idle timeout — avoids a slow cold reload on every message
+      # after a short gap. Bump/lower to taste; "-1" keeps it loaded forever.
+      - OLLAMA_KEEP_ALIVE=30m
+      # Cap concurrent model instances to 1: on memory-constrained hosts,
+      # letting two requests each load their own copy is what triggers OOM.
+      - OLLAMA_NUM_PARALLEL=1
+      - OLLAMA_MAX_LOADED_MODELS=1
     volumes:
       - ollama_data:/root/.ollama
     networks:
@@ -29,14 +39,15 @@ services:
       - OLLAMA_BASE_URL=http://ollama:11434
     volumes:
       - openclaw_state:/home/vscode/.openclaw
+      - ./openclaw/workspace:/home/vscode/workspace
     ports:
       - "18789:18789"
     networks:
       - ai-net
     depends_on:
       - ollama
-    stdin_open: true
-    tty: true
+    restart: unless-stopped
+    command: ["openclaw", "gateway", "run", "--bind", "lan"]
 
   claude-code:
     build:

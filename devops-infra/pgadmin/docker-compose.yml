@@ -28,14 +28,14 @@ services:
       - "${PGADMIN_PORT:-5050}:80"
     networks:
       - postgres
-      - nginx-proxy-manager_default
+      # - nginx-proxy-manager_default
     restart: unless-stopped
 
 networks:
   postgres:
     driver: bridge
-  nginx-proxy-manager_default:
-    external: true
+#  nginx-proxy-manager_default:
+#   external: true
 
 volumes:
   postgres:
