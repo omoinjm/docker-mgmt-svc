@@ -1,0 +1,3 @@
+[submodule "osint-tools/SearchPhone"]
+	path = osint-tools/SearchPhone
+	url = git@github.com:sys-internal-tools/SearchPhone.git
